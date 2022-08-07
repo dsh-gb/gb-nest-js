@@ -1,19 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
+import { News } from './entities/news.entity';
 
 @Injectable()
 export class NewsService {
+
+  private news: News[] = [
+    {
+      id: 1,
+      author: "Tom",
+      title: "news 1",
+      text: "text news 1",
+      date: "'2022-08-07T09:17:30.697Z'"
+    },
+    {
+      id: 2,
+      author: "Tom",
+      title: "news 2",
+      text: "text news 2", 
+      date: "'2022-08-07T09:17:33.697Z'"
+    }
+  ];
+
   create(createNewsDto: CreateNewsDto) {
-    return 'This action adds a new news';
+    const news: News = {
+      ...createNewsDto,
+      id: this.news.length + 1,
+      author: "Tom",
+      date: new Date().toISOString()
+    };
+    this.news.push(news);
+    return news;
   }
 
   findAll() {
-    return `This action returns all news`;
+    return this.news;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} news`;
+    const news = this.news.find((news) => news.id === id);
+
+    if (!news) {
+      throw new NotFoundException();
+    }
+
+    return news;
   }
 
   update(id: number, updateNewsDto: UpdateNewsDto) {
@@ -21,6 +53,14 @@ export class NewsService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} news`;
+    const news = this.news.find((news) => news.id === id);
+
+    if (!news) {
+      throw new NotFoundException();
+    }
+
+    this.news = this.news.filter((news) => news.id != id);
+
+    return `news by id = ${id} deleted`;
   }
 }
