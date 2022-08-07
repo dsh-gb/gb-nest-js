@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { UpdateCommentDto } from 'src/comments/dto/update-comment.dto';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
@@ -74,8 +75,28 @@ export class NewsService {
     return news;
   }
 
-  update(id: number, updateNewsDto: UpdateNewsDto) {
-    return `This action updates a #${id} news`;
+  // обновление новости с заданным id
+  updateNews(id: number, updateNewsDto: UpdateNewsDto) {
+    const news = this.news.find((news) => news.id === id);
+
+    if (!news) {
+      throw new NotFoundException();
+    }
+    
+    news.title = updateNewsDto.title ? updateNewsDto.title : news.title;
+    news.text = updateNewsDto.text ? updateNewsDto.text : news.text;
+  }
+
+  // обновление комментария для новости с заданным id
+  updateComment(id: number, updateComment: UpdateCommentDto) {
+    const news = this.news.find((news) => news.id === id);
+
+    if (!news) {
+      throw new NotFoundException();
+    }
+    
+    news.comments = [];
+    this.createComment(updateComment);
   }
 
   remove(id: number) {
