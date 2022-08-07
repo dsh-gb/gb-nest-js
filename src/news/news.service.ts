@@ -101,9 +101,6 @@ export class NewsService {
     }
 
     comm.text = updateComment.text;
-
-    //news.comments = [];
-    this.createComment(updateComment);
   }
 
   remove(id: number) {
