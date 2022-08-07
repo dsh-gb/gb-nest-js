@@ -87,15 +87,22 @@ export class NewsService {
     news.text = updateNewsDto.text ? updateNewsDto.text : news.text;
   }
 
-  // обновление комментария для новости с заданным id
-  updateComment(id: number, updateComment: UpdateCommentDto) {
-    const news = this.news.find((news) => news.id === id);
+  // обновление комментария для новости с заданным newsId и commId
+  updateComment(newsId: number, updateComment: UpdateCommentDto) {
+    const news = this.news.find((news) => news.id === newsId);
 
     if (!news) {
       throw new NotFoundException();
     }
     
-    news.comments = [];
+    const comm = news.comments.find((comm) => comm.id === updateComment.id);
+    if (!comm) {
+      throw new NotFoundException();
+    }
+
+    comm.text = updateComment.text;
+
+    //news.comments = [];
     this.createComment(updateComment);
   }
 
