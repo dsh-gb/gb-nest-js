@@ -69,7 +69,7 @@ export class NewsService {
     const news = this.news.find((news) => news.id === id);
 
     if (!news) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Not found news with id=${id}`);
     }
 
     return news;
@@ -80,7 +80,7 @@ export class NewsService {
     const news = this.news.find((news) => news.id === id);
 
     if (!news) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Not found news with id=${id}`);
     }
     
     news.title = updateNewsDto.title ? updateNewsDto.title : news.title;
@@ -92,12 +92,12 @@ export class NewsService {
     const news = this.news.find((news) => news.id === newsId);
 
     if (!news) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Not found news with id=${newsId}`);
     }
     
     const comm = news.comments.find((comm) => comm.id === updateComment.id);
     if (!comm) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Not found comment with id=${updateComment.id}`);
     }
 
     comm.text = updateComment.text;
