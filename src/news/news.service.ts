@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { UpdateCommentDto } from 'src/comments/dto/update-comment.dto';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
@@ -68,14 +69,38 @@ export class NewsService {
     const news = this.news.find((news) => news.id === id);
 
     if (!news) {
-      throw new NotFoundException();
+      throw new NotFoundException(`Not found news with id=${id}`);
     }
 
     return news;
   }
 
-  update(id: number, updateNewsDto: UpdateNewsDto) {
-    return `This action updates a #${id} news`;
+  // обновление новости с заданным id
+  updateNews(id: number, updateNewsDto: UpdateNewsDto) {
+    const news = this.news.find((news) => news.id === id);
+
+    if (!news) {
+      throw new NotFoundException(`Not found news with id=${id}`);
+    }
+    
+    news.title = updateNewsDto.title ? updateNewsDto.title : news.title;
+    news.text = updateNewsDto.text ? updateNewsDto.text : news.text;
+  }
+
+  // обновление комментария для новости с заданным newsId и commId
+  updateComment(newsId: number, updateComment: UpdateCommentDto) {
+    const news = this.news.find((news) => news.id === newsId);
+
+    if (!news) {
+      throw new NotFoundException(`Not found news with id=${newsId}`);
+    }
+    
+    const comm = news.comments.find((comm) => comm.id === updateComment.id);
+    if (!comm) {
+      throw new NotFoundException(`Not found comment with id=${updateComment.id}`);
+    }
+
+    comm.text = updateComment.text;
   }
 
   remove(id: number) {

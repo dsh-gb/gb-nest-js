@@ -3,6 +3,7 @@ import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { UpdateCommentDto } from 'src/comments/dto/update-comment.dto';
 
 @Controller('news')
 export class NewsController {
@@ -31,7 +32,12 @@ export class NewsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
-    return this.newsService.update(+id, updateNewsDto);
+    return this.newsService.updateNews(+id, updateNewsDto);
+  }
+
+  @Patch('comment/:id')
+  updateComment(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
+    return this.newsService.updateComment(+id, updateCommentDto);
   }
 
   @Delete(':id')
